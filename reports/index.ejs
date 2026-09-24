@@ -1,0 +1,121 @@
+<%- include('../partials/header') %>
+    <main class="container-wide">
+
+        <div class="card">
+            <div class="card-header">
+                <h1 class="page-title">Reports &amp; Analytics</h1>
+            </div>
+            <p class="muted" style="margin-top:-8px;">Overview of all sessions and player activity across every sport.
+            </p>
+        </div>
+
+        <!-- ── Summary Stats ────────────────────────── -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-num">
+                    <%= totalSessions %>
+                </div>
+                <div class="stat-label">Total sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">
+                    <%= activeSessions %>
+                </div>
+                <div class="stat-label">Active sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">
+                    <%= cancelledSessions %>
+                </div>
+                <div class="stat-label">Cancelled sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">
+                    <%= totalJoins %>
+                </div>
+                <div class="stat-label">Total joins</div>
+            </div>
+        </div>
+
+        <!-- ── Per-sport breakdown ──────────────────── -->
+        <div class="card">
+            <h2>Sessions per sport</h2>
+            <% if (reportRows.length===0) { %>
+                <div class="empty-state">
+                    <p>No session data yet. Create some sessions to see analytics.</p>
+                </div>
+                <% } else { %>
+                    <table class="report-table" id="reports-table">
+                        <thead>
+                            <tr>
+                                <th>Sport</th>
+                                <th>Total sessions</th>
+                                <th>Active</th>
+                                <th>Cancelled</th>
+                                <th>Total joins</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% reportRows.forEach((row)=> { %>
+                                <tr>
+                                    <td><strong>
+                                            <%= row.sport %>
+                                        </strong></td>
+                                    <td><span class="badge badge-brand">
+                                            <%= row.total %>
+                                        </span></td>
+                                    <td><span class="badge badge-green">
+                                            <%= row.active %>
+                                        </span></td>
+                                    <td>
+                                        <% if (row.cancelled> 0) { %>
+                                            <span class="badge badge-red">
+                                                <%= row.cancelled %>
+                                            </span>
+                                            <% } else { %>
+                                                <span class="badge badge-gray">0</span>
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <%= row.joins %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+        </div>
+
+        <!-- ── Recent sessions log ──────────────────── -->
+        <div class="card">
+            <h2>Recent sessions (all sports)</h2>
+            <% if (recentSessions.length===0) { %>
+                <div class="empty-state">
+                    <p>No sessions have been created yet.</p>
+                </div>
+                <% } else { %>
+                    <% recentSessions.forEach((s)=> { %>
+                        <div class="session-item">
+                            <div class="session-title">
+                                <%= s.sport ? s.sport.name : "Unknown Sport" %>
+                            </div>
+                            <div class="session-meta">
+                                <span>Venue: <%= s.venue %></span>
+                                <span>Date: <%= new Date(s.date).toLocaleString('en-IN', { dateStyle:'medium',
+                                        timeStyle:'short' }) %></span>
+                                <span>Host: <%= s.createdBy ? s.createdBy.name : "Unknown User" %></span>
+                                <% if (s.isCancelled) { %>
+                                    <span class="badge badge-red">Cancelled</span>
+                                    <% } else { %>
+                                        <span class="badge badge-green">
+                                            <%= s.joinedPlayers.length %> joined
+                                        </span>
+                                        <% } %>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } %>
+        </div>
+
+    </main>
+    <%- include('../partials/footer') %>

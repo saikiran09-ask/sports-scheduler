@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+  <main class="container">
+
+    <div class="card">
+      <div class="card-header">
+        <h1 class="page-title">Manage Sports</h1>
+      </div>
+      <p class="muted" style="margin-top:-8px;margin-bottom:20px;">Add sports that players can use when creating
+        sessions.</p>
+
+      <form action="/sports" method="POST" class="inline-form-row" id="add-sport-form" style="margin-top:0;">
+        <input type="text" id="sport-name" name="name" placeholder="e.g. Basketball, Cricket, Badminton" required
+          style="margin-top:0; max-width: 300px;" />
+        <button type="submit" id="btn-add-sport" style="margin-top:0;">Add sport</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Sports library</h2>
+
+      <% if (sports.length===0) { %>
+        <div class="empty-state">
+          <p>No sports added yet. Use the form above to create your first one.</p>
+        </div>
+        <% } else { %>
+          <ul class="sport-list" id="sports-list">
+            <% sports.forEach((sport)=> { %>
+              <li class="sport-item">
+                <span style="flex:1;font-weight:500;">
+                  <%= sport.name %>
+                </span>
+                <span class="badge badge-gray">Added <%= new Date(sport.createdAt).toLocaleDateString('en-IN', {
+                    day:'numeric', month:'short', year:'numeric' }) %></span>
+              </li>
+              <% }) %>
+          </ul>
+          <% } %>
+    </div>
+
+  </main>
+  <%- include('../partials/footer') %>
